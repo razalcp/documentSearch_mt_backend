@@ -11,9 +11,10 @@ const generateToken = (user) => {
         userId: user._id,
         email: user.email
     };
-    return jsonwebtoken_1.default.sign(payload, config_1.config.JWT_SECRET, {
+    const options = {
         expiresIn: config_1.config.JWT_EXPIRE
-    });
+    };
+    return jsonwebtoken_1.default.sign(payload, config_1.config.JWT_SECRET, options);
 };
 exports.generateToken = generateToken;
 const verifyToken = (token) => {

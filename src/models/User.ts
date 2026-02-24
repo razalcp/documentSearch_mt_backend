@@ -1,8 +1,14 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document as MongooseDocument, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { IUser } from '../types';
 
-export interface IUserDocument extends IUser, Document {
+// Mongoose user document type with typed fields
+export interface IUserDocument extends MongooseDocument {
+  email: string;
+  password: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 

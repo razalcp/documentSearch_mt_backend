@@ -51,12 +51,13 @@ const getDocuments = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
-        const documents = await Document_1.Document.find()
+        const query = req.user ? { uploadedBy: req.user._id } : { _id: { $in: [] } };
+        const documents = await Document_1.Document.find(query)
             .populate('uploadedBy', 'name email')
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
-        const total = await Document_1.Document.countDocuments();
+        const total = await Document_1.Document.countDocuments(query);
         res.json({
             documents,
             pagination: {
@@ -84,6 +85,12 @@ const searchDocuments = async (req, res) => {
         const dateFrom = req.query.dateFrom;
         const dateTo = req.query.dateTo;
         let mongoQuery = {};
+        if (req.user) {
+            mongoQuery.uploadedBy = req.user._id;
+        }
+        else {
+            mongoQuery._id = { $in: [] };
+        }
         if (fileType) {
             mongoQuery.fileType = fileType;
         }
@@ -146,7 +153,8 @@ const getSuggestions = async (req, res) => {
     try {
         const query = req.query.q;
         const limit = parseInt(req.query.limit) || 5;
-        const documents = await Document_1.Document.find({});
+        const docQuery = req.user ? { uploadedBy: req.user._id } : {};
+        const documents = await Document_1.Document.find(docQuery);
         searchEngine.addDocuments(documents);
         const suggestions = searchEngine.getSuggestions(query, limit);
         res.json({
@@ -166,6 +174,14 @@ const downloadDocument = async (req, res) => {
         const document = await Document_1.Document.findById(id);
         if (!document) {
             res.status(404).json({ error: 'Document not found' });
+            return;
+        }
+        if (!req.user) {
+            res.status(401).json({ error: 'Authentication required to download.' });
+            return;
+        }
+        if (document.uploadedBy.toString() !== req.user._id.toString()) {
+            res.status(403).json({ error: 'Access denied. You can only download your own documents.' });
             return;
         }
         const fileName = document.fileName;

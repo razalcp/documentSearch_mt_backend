@@ -1,9 +1,16 @@
-import mongoose, { Document } from 'mongoose';
-import { IDocument } from '../types';
-export interface IDocumentDocument extends IDocument, Document {
+import mongoose, { Document as MongooseDocument } from 'mongoose';
+export interface IDocumentDocument extends MongooseDocument {
+    title: string;
+    content: string;
+    fileName: string;
+    fileType: string;
+    fileSize: number;
+    uploadedBy: any;
+    createdAt: Date;
+    updatedAt: Date;
 }
 export declare const Document: mongoose.Model<IDocumentDocument, {}, {}, {}, mongoose.Document<unknown, {}, IDocumentDocument, {}, {}> & IDocumentDocument & Required<{
-    _id: string;
+    _id: unknown;
 }> & {
     __v: number;
 }, any>;

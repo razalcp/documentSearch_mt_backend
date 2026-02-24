@@ -1,7 +1,17 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document as MongooseDocument, Schema } from 'mongoose';
 import { IDocument } from '../types';
 
-export interface IDocumentDocument extends IDocument, Document {}
+// Mongoose document type with typed fields
+export interface IDocumentDocument extends MongooseDocument {
+  title: string;
+  content: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  uploadedBy: any;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const documentSchema = new Schema<IDocumentDocument>({
   title: {

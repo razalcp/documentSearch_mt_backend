@@ -1,17 +1,15 @@
-import { IDocument } from '../types';
-
 export interface TFIDFResult {
-  document: IDocument;
+  document: any;
   score: number;
   highlights: string[];
 }
 
 export class TFIDFSearchEngine {
-  private documents: IDocument[] = [];
+  private documents: any[] = [];
 
   constructor() {}
 
-  public addDocuments(documents: IDocument[]): void {
+  public addDocuments(documents: any[]): void {
     this.documents = documents;
   }
 

@@ -1,6 +1,5 @@
-import jwt from 'jsonwebtoken';
+import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import { config } from '../config';
-import { IUser } from '../types';
 
 export interface JwtPayload {
   userId: string;
@@ -9,15 +8,18 @@ export interface JwtPayload {
   exp?: number;
 }
 
-export const generateToken = (user: IUser): string => {
+export const generateToken = (user: { _id: any; email: string }): string => {
   const payload: JwtPayload = {
     userId: user._id,
     email: user.email
   };
 
-  return jwt.sign(payload, config.JWT_SECRET, {
-    expiresIn: config.JWT_EXPIRE
-  });
+  const options: SignOptions = {
+    // jsonwebtoken's typings use a StringValue type; cast to satisfy TS
+    expiresIn: config.JWT_EXPIRE as any
+  };
+
+  return jwt.sign(payload, config.JWT_SECRET as Secret, options);
 };
 
 export const verifyToken = (token: string): JwtPayload => {

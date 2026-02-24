@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction, RequestHandler } from 'express';
 import { verifyToken } from '../utils/jwt';
 import { User } from '../models/User';
 import { IAuthRequest } from '../types';
 
-export const authenticate = async (req: IAuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const authenticate: RequestHandler = async (req, res, next): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
     
@@ -22,14 +22,14 @@ export const authenticate = async (req: IAuthRequest, res: Response, next: NextF
       return;
     }
 
-    req.user = user;
+    (req as IAuthRequest).user = user;
     next();
   } catch (error) {
     res.status(401).json({ error: 'Invalid token.' });
   }
 };
 
-export const optionalAuth = async (req: IAuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const optionalAuth: RequestHandler = async (req, res, next): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
     
@@ -39,7 +39,7 @@ export const optionalAuth = async (req: IAuthRequest, res: Response, next: NextF
       const user = await User.findById(decoded.userId);
       
       if (user) {
-        req.user = user;
+        (req as IAuthRequest).user = user;
       }
     }
     

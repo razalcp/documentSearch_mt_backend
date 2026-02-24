@@ -7,13 +7,17 @@ exports.disconnectDB = exports.connectDB = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const index_1 = require("./index");
 const connectDB = async () => {
+    if (mongoose_1.default.connection.readyState === 1)
+        return;
     try {
         const conn = await mongoose_1.default.connect(index_1.config.MONGODB_URI);
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     }
     catch (error) {
         console.error('Database connection error:', error);
-        process.exit(1);
+        if (!process.env.VERCEL)
+            process.exit(1);
+        throw error;
     }
 };
 exports.connectDB = connectDB;

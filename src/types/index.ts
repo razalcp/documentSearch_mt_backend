@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 export interface IUser {
   _id: string;
   email: string;
@@ -37,7 +39,8 @@ export interface ISearchQuery {
 }
 
 export interface IAuthRequest extends Request {
-  user?: IUser;
+  // Populated with the authenticated user (Mongoose document) when available
+  user?: any;
 }
 
 export interface IUploadedFile {

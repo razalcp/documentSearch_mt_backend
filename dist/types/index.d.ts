@@ -1,3 +1,4 @@
+import { Request } from 'express';
 export interface IUser {
     _id: string;
     email: string;
@@ -33,7 +34,7 @@ export interface ISearchQuery {
     dateTo?: string;
 }
 export interface IAuthRequest extends Request {
-    user?: IUser;
+    user?: any;
 }
 export interface IUploadedFile {
     fieldname: string;

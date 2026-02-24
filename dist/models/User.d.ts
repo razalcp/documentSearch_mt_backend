@@ -1,10 +1,14 @@
-import mongoose, { Document } from 'mongoose';
-import { IUser } from '../types';
-export interface IUserDocument extends IUser, Document {
+import mongoose, { Document as MongooseDocument } from 'mongoose';
+export interface IUserDocument extends MongooseDocument {
+    email: string;
+    password: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
     comparePassword(candidatePassword: string): Promise<boolean>;
 }
 export declare const User: mongoose.Model<IUserDocument, {}, {}, {}, mongoose.Document<unknown, {}, IUserDocument, {}, {}> & IUserDocument & Required<{
-    _id: string;
+    _id: unknown;
 }> & {
     __v: number;
 }, any>;
