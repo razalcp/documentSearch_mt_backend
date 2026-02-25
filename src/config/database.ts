@@ -8,8 +8,8 @@ export const connectDB = async (): Promise<void> => {
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error('Database connection error:', error);
-    if (!process.env.VERCEL) process.exit(1);
-    throw error;
+    // Don't exit on Vercel, just throw the error
+    throw new Error(`Database connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 };
 

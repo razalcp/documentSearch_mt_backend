@@ -22,18 +22,8 @@ app.use(limiter);
 // CORS configuration - allow Vercel frontend and localhost
 app.use(cors({
   origin: (origin, callback) => {
-    const allowed = [
-      'http://localhost:3000',
-      'http://localhost:5173',
-      process.env.FRONTEND_URL,
-      process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`,
-      process.env.VERCEL_BRANCH_URL && `https://${process.env.VERCEL_BRANCH_URL}`,
-    ].filter(Boolean);
-    if (!origin || allowed.some(allowedUrl => origin === allowedUrl) || /\.vercel\.app$/.test(origin || '')) {
-      callback(null, true);
-    } else {
-      callback(null, true); // Allow for now - restrict via FRONTEND_URL in prod if needed
-    }
+    // Allow all origins in production for now, restrict via FRONTEND_URL if needed
+    callback(null, true);
   },
   credentials: true
 }));
